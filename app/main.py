@@ -22,5 +22,6 @@ async def homepage():
     return {"message": "Welcome to the To-Do List API!"}    
 
 app.include_router(router) #Include the tasks router
+
 #fastapi dev main.py -- is the command to run the FastAPI application'''
 #uv run fastapi run -- command to run the FastAPI application

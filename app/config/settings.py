@@ -5,6 +5,3 @@ class Settings(BaseSettings): # MongoDB connection settings
     mongo_username: str
     mongo_password: str
     mongo_server: str
-
-
-    
