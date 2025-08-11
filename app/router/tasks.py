@@ -6,6 +6,7 @@ from typing import List
 router = APIRouter(prefix="/tasks", tags=["Tasks"])    
 
 #CRUD operations for tasks
+
 # Create a new task
 
 @router.post("/", response_model=Task)

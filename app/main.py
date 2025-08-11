@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.config.database import init
+from app.config.database import init, close
+from contextlib import asynccontextmanager
 from scalar_fastapi import get_scalar_api_reference
 from app.router.tasks import router   
 
@@ -13,9 +14,15 @@ async def scalar_html():
         title=app.title,
     )
 
-@app.on_event("startup")
-async def start_db():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     await init()
+    try:
+        yield
+    finally:
+        await close()
+
+app = FastAPI(title="Todo API", lifespan=lifespan)
 
 @app.get("/") #Homepage route
 async def homepage():
