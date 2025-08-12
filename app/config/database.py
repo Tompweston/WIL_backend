@@ -7,14 +7,21 @@ settings = Settings()
 
 client: AsyncMongoClient | None = None
 
-async def init():
-    mongo_uri = settings.mongo_uri
+async def init_db():
     global client
-    client = AsyncMongoClient(mongo_uri)
-    await client.admin.command("ping")  # quick “is Mongo alive?”
-    print("\nPing Successful, MongoDB connection established\n")
-    await init_beanie(database=client.ToDoDB, document_models=[Task])
+    client = AsyncMongoClient(settings.mongo_uri, serverSelectionTimeoutMS=5000)
+    try:
+        await client.admin.command("ping")  # check connection/auth quickly
+        await init_beanie(database=client.ToDoDB, document_models=[Task])
+        print("\nPing successful, MongoDB connection established\n")
 
-async def close():
+    except Exception as e:
+        # ALWAYS close if startup fails, then re-raise so app doesn’t half-start
+        if client:
+            await client.close()
+        client = None
+        raise RuntimeError(f"MongoDB/Beanie init failed: {e}") from e
+        
+async def close_db():
     if client:
         await client.close()

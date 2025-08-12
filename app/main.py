@@ -1,8 +1,11 @@
 from fastapi import FastAPI
-from app.config.database import init, close
+from app.config.database import init_db, close_db
 from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 from app.router.tasks import router   
+from pymongo import AsyncMongoClient
 
 
 app = FastAPI()
@@ -15,12 +18,12 @@ async def scalar_html():
     )
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    await init()
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    await init_db()
     try:
         yield
     finally:
-        await close()
+        await close_db()
 
 app = FastAPI(title="Todo API", lifespan=lifespan)
 
