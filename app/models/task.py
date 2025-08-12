@@ -8,6 +8,7 @@ class Task(Document):
     title: str
     description: Optional[str] = None
     completed: bool = False
+    userID: Optional[str] = None  # Optional field for user ID
 
 # Pydantic model for task updates
 class TaskUpdate(BaseModel):
