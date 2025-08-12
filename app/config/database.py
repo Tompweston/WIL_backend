@@ -8,13 +8,11 @@ settings = Settings()
 client: AsyncMongoClient | None = None
 
 async def init():
-    mongo_uri = (
-    f"mongodb+srv://{settings.mongo_username}:{settings.mongo_password}@{settings.mongo_server}"
-    )
+    mongo_uri = settings.mongo_uri
     global client
     client = AsyncMongoClient(mongo_uri)
     await client.admin.command("ping")  # quick “is Mongo alive?”
-    print("\nPing Successful,MongoDB connection established\n")
+    print("\nPing Successful, MongoDB connection established\n")
     await init_beanie(database=client.ToDoDB, document_models=[Task])
 
 async def close():
