@@ -11,6 +11,9 @@ settings = Settings()
 client: AsyncMongoClient | None = None
 
 # Initialize the database, ensure connection is established. Closes connection if it fails.
+### NEED TO ADD MORE ROBUST ERROR HANDLING FOR CONNECTION ISSUES ###
+
+
 async def init_db():
     global client
     client = AsyncMongoClient(settings.mongo_uri, serverSelectionTimeoutMS=5000)

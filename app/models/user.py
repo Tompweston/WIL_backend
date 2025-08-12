@@ -1,6 +1,4 @@
-from typing import Optional
 from beanie import Document
-
 
 # defines how users data will be structured in the database
 class User(Document):

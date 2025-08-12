@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
-
-# this file is used to load environment variables and set up the database connection
-class Settings(BaseSettings): # MongoDB connection settings
+# this file is used to load environment variables 
+class Settings(BaseSettings): 
     model_config = {"env_file": ".env"}
-    mongo_uri: str
+    mongo_uri: str # MongoDB connection URI
+    vite_dev_server_url: str  # Default Vite dev server URL
