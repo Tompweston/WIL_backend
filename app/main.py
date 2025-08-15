@@ -34,12 +34,11 @@ async def scalar_html():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.vite_dev_server_url.split(","),  # Allow origins from settings
+    allow_origins=settings.vite_server_url.split(","),  # Allow origins from settings
     allow_credentials=True,  # set to False if not using cookies/auth via cookies
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Homepage route
 @app.get("/")

@@ -4,4 +4,4 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings): 
     model_config = {"env_file": ".env"}
     mongo_uri: str # MongoDB connection URI
-    vite_dev_server_url: str  # Default Vite dev server URL
+    vite_server_url: str  # Default Vite dev server URL

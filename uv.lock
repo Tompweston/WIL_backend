@@ -717,7 +717,7 @@ wheels = [
 ]
 
 [[package]]
-name = "wil-proj"
+name = "wil-proj-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
