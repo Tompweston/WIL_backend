@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +7,8 @@ from app.router.tasks import tasks_router
 from app.router.users import user_router
 from app.config.settings import Settings
 from app.config.database import lifespan
+from app.errors.handlers import http_exception_handler, validation_exception_handler, unhandled_exception_handler 
+from fastapi.exceptions import RequestValidationError
 
 
 settings = Settings()  # Initialize settings
@@ -39,6 +41,11 @@ async def homepage():
 # Include Routes
 app.include_router(tasks_router)  # Include the tasks router
 app.include_router(user_router)  # Include the users router
+
+# Include Exception Handlers for routes 
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, unhandled_exception_handler)
 
 # fastapi dev main.py -- is the command to run the FastAPI application
 # uv run fastapi run -- command to run the FastAPI application

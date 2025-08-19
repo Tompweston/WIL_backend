@@ -18,6 +18,8 @@ async def create_task(task: Task):
 @tasks_router.get("/", response_model=List[Task])
 async def get_all_tasks():
     tasks = await Task.find_all().to_list()
+    if not tasks:
+        raise HTTPException(status_code=404, detail="No tasks found")
     return tasks
 
 # Get a task by ID

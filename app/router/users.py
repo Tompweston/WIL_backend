@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.models.user import User
 from typing import List
 
-#places task routes under the /tasks prefix and tags them as "Tasks" in the API documentation
+#places task routes under the /users prefix and tags them as "Tasks" in the API documentation
 user_router = APIRouter(prefix="/users", tags=["Users"])    
 
 #CRUD operations for tasks
