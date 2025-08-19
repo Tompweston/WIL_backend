@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from app.config.database import init_db, close_db
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,19 +6,12 @@ from scalar_fastapi import get_scalar_api_reference
 from app.router.tasks import tasks_router   
 from app.router.users import user_router
 from app.config.settings import Settings
+from app.config.database import lifespan
+
 
 settings = Settings()  # Initialize settings
 
-# lifespan event to initialize and close the database connection
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    await init_db()
-    try:
-        yield
-    finally:
-        await close_db()
-
-# Create FastAPI app instance
+# Initialize the FastAPI application with lifespan context manager & Create FastAPI app instance
 app = FastAPI(title="Todo API", lifespan=lifespan)
 
 # API scalar documentation formatting
@@ -31,7 +23,6 @@ async def scalar_html():
     )
 
 # CORS middleware to allow cross-origin requests
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.vite_server_url.split(","),  # Allow origins from settings
