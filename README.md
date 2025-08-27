@@ -1,90 +1,41 @@
-# Scope:
-This project is to develop a full-stack web application which is encompasses a simple to-do application. The functionality of the web app is to be able to add, delete and edit tasks as well as check them as complete or have them unchecked inferring still needing attention. 
+# Tommy's To-Dos
 
-# Purpose:
-The objective of this process is to give me a better understanding of the way that web tech stacks are set up and how different technologies communicate with each other. On top of this there is a desire to enable deployment of new updates to be automated and seamless through what currently seems to be GitHub Actions and to be secured via some authorisation method. 
+> A nice first crack at full stack web development, including auth and CI/CD.
 
-# Technologies used:
-- FastAPI
-- Vue
-- MongoDB
+## Why
+The reason for this project is to learn industry standard devlopment practices/technologies to develop my first modern and secure web app. 
 
-# Minimum Viable Product
-The minimum viable product for this project is to have a website hosted on a external hosting provider and meet the following FRs and NFRs. Core features include CI/CD, automatic API documentation. The final product should be a simple ToDo application. 
+## Features
+- Log in/Sign up users 
+- Users can add, edit and delete tasks
 
-# Requirements 
+## Tech Stack
+- Frontend: SvelteKit (https://github.com/Tompweston/WIL_frontend)
+- Backend: FastAPI
+- Database: MongoDB
+- Hosting: TBC
 
-## Functional Requirements
-These describe what the system should do — the core features and functions.
+## Quick Start
+**Prereqs:** , Python 3.13+, MongoDB connection string, 
 
-### User Registration and Login
+```bash
+# 1) Clone the repository
+git clone https://github.com/<you>/<repo>.git
+cd <repo>
 
-- Users can sign up with an email and password.
+# 2) Configure environment variables
+cp .env.example .env
+# Edit .env with your MongoDB connection string and other settings
 
-- Users can log in and log out securely.
+# 3) Set up Python environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-### Task CRUD Operations
+# 4) Install dependencies
+pip install -e .
 
-- Users can create new tasks.
-
-- Users can read/view their list of tasks.
-
-- Users can update task details (e.g. description, completion status).
-
-- Users can delete individual or all tasks.
-
-### Task Status Management
-
-- Users can mark tasks as complete or incomplete.
-
-- Users can filter tasks by status (All / Complete / Incomplete).
-
-- Authentication and Authorization
-
-- Only logged-in users can access their tasks.
-
-### API Documentation
-
-- Auto-generated API docs using OpenAPI/Swagger **Potentially using scaler as well**
-
-- Frontend Integration
-
-## Non-Functional Requirements (NFR)
-These define how the system performs rather than what it does.
-
-### Performance
-
-- API response time should be less than 500ms for 95% of requests.
-
-- Frontend should load within 2 seconds on standard connections.
-
-### Security
-
-- Passwords must be hashed 
-
-- Authentication must be present for securing endpoints.
-
-- Reliability & Availability
-
-- 99.9% uptime with minimal outages.
-
-- Proper error handling and logging in place.
-
-### Usability
-
-- Clean and responsive UI that works on desktop, not responsive for this pupose.
-
-- Simple and intuitive user experience.
-
-### Maintainability
-
-- Code should follow standard best practices
-
-- Well-documented API and components.
-
-- The project must have CI/CD capabilities via github actions 
-
-
-### Testability
-
-- Unit and integration tests should cover major components.
+# 5) Run the development server
+uvicorn app.main:app --reload
+```
+The API will be available at http://127.0.0.1:8000
+API documentation is available at http://127.0.0.1:8000/docs

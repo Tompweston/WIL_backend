@@ -7,7 +7,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={
-            "error": exc.detail or "HTTP unhandled error",
+            "error": "HTTP unhandled error",
             "path": str(request.url),
         },
     )
@@ -19,7 +19,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=422,
         content={
             "error": "Validation failed",
-            "details": exc.errors(),  # list of what was wrong
             "path": str(request.url),
         },
     )
