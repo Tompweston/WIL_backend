@@ -9,8 +9,12 @@ class Task(Document):
     description: Optional[str] = None
     completed: bool = False
     userID: Optional[str] = None  # Optional field for user ID
+    urgent: bool = False  # New field to indicate if the task is urgent
 
 # Pydantic model for task updates
 class TaskUpdate(BaseModel):
-    description: Optional[str] = None
-    completed: Optional[bool] = None
+    title: Optional[str]
+    description: Optional[str]
+    completed: Optional[bool]
+    userID: Optional[str]
+    urgent: Optional[bool]

@@ -31,13 +31,16 @@ async def get_task(id: str):
     return task
 
 # Update a task by ID
-@tasks_router.patch("/{id}", response_model=Task)
+@tasks_router.patch("/{id}", response_model=TaskUpdate)
 async def update_task(id: str, task_data: TaskUpdate):
     task = await Task.get(id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    task.title = task_data.title
     task.description = task_data.description
     task.completed = task_data.completed
+    task.userID = task_data.userID
+    task.urgent = task_data.urgent
     await task.save()
     return task
 

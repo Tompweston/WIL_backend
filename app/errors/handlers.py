@@ -2,16 +2,27 @@ from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
+
+# Handles 404 HTTP exceptions
+async def not_found_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": exc.detail,
+            "path": str(request.url),
+        },
+    )
+
+
 # Handles HTTP exceptions
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={
-            "error": "HTTP unhandled error",
+            "error": "HTTP error occurred",
             "path": str(request.url),
         },
     )
-
 
 # Handles FastAPI request validation errors (422)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
