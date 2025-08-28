@@ -11,3 +11,7 @@ wheels/
 
 # DB connection strings 
 .env
+
+# User-specific files
+.ruff_cache
+.DS_Store
