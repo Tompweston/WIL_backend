@@ -50,5 +50,8 @@ async def delete_task(id: str):
     await task.delete()
     return {"message": "Task deleted"}
 
-
-    
+# Delete all tasks
+@tasks_router.delete("/")
+async def delete_all_tasks():
+    await Task.delete_all()
+    return {"message": "All tasks deleted"}
