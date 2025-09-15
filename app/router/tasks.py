@@ -6,7 +6,11 @@ from typing import List
 tasks_router = APIRouter(prefix="/tasks", tags=["Tasks"])    
 
 #CRUD operations for tasks
-### NEED TO ADD BETTER ERROR HANDLING FOR 500 and 422 HTTP ERRORS ###
+# Showed me how to change http responses, something that will be addressed later 
+#responses={
+    #422: {"description": "Validation Error"}, #=
+    #500: {"description": "Internal Server Error"}
+#}
 
 # Create a new task
 @tasks_router.post("/", response_model=Task)
@@ -31,16 +35,14 @@ async def get_task(id: str):
     return task
 
 # Update a task by ID
-@tasks_router.patch("/{id}", response_model=TaskUpdate)
+@tasks_router.patch("/{id}", response_model=Task)
 async def update_task(id: str, task_data: TaskUpdate):
     task = await Task.get(id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    task.title = task_data.title
-    task.description = task_data.description
-    task.completed = task_data.completed
-    task.userID = task_data.userID
-    task.urgent = task_data.urgent
+    recived = task_data.dict(exclude_unset=True)
+    for key, value in recived.items():
+        setattr(task, key, value)
     await task.save()
     return task
 
