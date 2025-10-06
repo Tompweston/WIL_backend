@@ -3,7 +3,7 @@ from app.models.task import Task, TaskUpdate
 from typing import List
 
 #places task routes under the /tasks prefix and tags them as "Tasks" in the API documentation
-tasks_router = APIRouter(prefix="/tasks", tags=["Tasks"])    
+tasks_router = APIRouter( tags=["Tasks"] )    
 
 #CRUD operations for tasks
 # Showed me how to change http responses, something that will be addressed later 
@@ -25,6 +25,15 @@ async def get_all_tasks():
     if not tasks:
         raise HTTPException(status_code=404, detail="No tasks found")
     return tasks
+
+# Get tasks by user ID
+@tasks_router.get("/{user_id}", response_model=List[Task])
+async def get_tasks_by_user_id(user_id: str):
+    tasks = await Task.find({"user_id": user_id}).to_list()
+    if not tasks:
+        raise HTTPException(status_code=404, detail="No tasks found for this user")
+    return tasks
+    
 
 # Get a task by ID
 @tasks_router.get("/{id}", response_model=Task)

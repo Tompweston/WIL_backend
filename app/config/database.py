@@ -1,7 +1,7 @@
 from pymongo import AsyncMongoClient
 from beanie import init_beanie   
 from app.models.task import Task
-from app.models.user import User
+from app.models.user import user
 from app.config.settings import Settings
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     client = AsyncMongoClient(settings.mongo_uri, serverSelectionTimeoutMS=5000)
     try:
         await client.admin.command("ping")  # check connection/auth quickly
-        await init_beanie(database=client.ToDoDB, document_models=[Task, User])
+        await init_beanie(database=client.ToDoDB, document_models=[Task, user])
         print("\nPing successful, MongoDB connection established\n")
     except Exception as e:
         if client:

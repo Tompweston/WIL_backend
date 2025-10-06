@@ -33,10 +33,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Homepage route
-@app.get("/")
-async def homepage():
-    return {"message": "Welcome to the To-Do List API!"}    
 
 # Include Routes
 app.include_router(tasks_router)  # Include the tasks router
