@@ -40,8 +40,8 @@ async def update_task(id: str, task_data: TaskUpdate):
     task = await Task.get(id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    recived = task_data.dict(exclude_unset=True)
-    for key, value in recived.items():
+    received = task_data.dict(exclude_unset=True)
+    for key, value in received.items():
         setattr(task, key, value)
     await task.save()
     return task
