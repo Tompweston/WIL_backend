@@ -7,7 +7,7 @@ from app.router.tasks import tasks_router
 from app.router.users import user_router
 from app.config.settings import Settings
 from app.config.database import lifespan
-from app.errors.handlers import http_exception_handler, validation_exception_handler, unhandled_exception_handler 
+from app.errors.handlers import http_exception_handler, validation_exception_handler, unhandled_exception_handler, not_found_exception_handler
 from fastapi.exceptions import RequestValidationError
 
 
@@ -27,7 +27,7 @@ async def scalar_html():
 # CORS middleware to allow cross-origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.vite_server_url.split(","),  # Allow origins from settings
+    allow_origins=settings.allowed_servers,  # Allow origins from settings
     allow_credentials=True,  # set to False if not using cookies/auth via cookies
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,6 +46,7 @@ app.include_router(user_router)  # Include the users router
 app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
+app.add_exception_handler(HTTPException, not_found_exception_handler)
 
 # fastapi dev main.py -- is the command to run the FastAPI application
 # uv run fastapi run -- command to run the FastAPI application
