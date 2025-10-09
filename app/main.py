@@ -45,7 +45,7 @@ app.include_router(tasks_router)  # Include the tasks router
 app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
-app.add_exception_handler(404, not_found_exception_handler)
+app.add_exception_handler(HTTPException, not_found_exception_handler)
 
 # fastapi dev main.py -- is the command to run the FastAPI application
 # uv run fastapi run -- command to run the FastAPI application
