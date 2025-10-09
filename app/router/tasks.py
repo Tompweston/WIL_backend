@@ -35,7 +35,10 @@ async def authenticate_user(user_id: str, type: str) -> bool:
             exp_time = datetime.fromisoformat(s["expiresAt"])
             if exp_time < datetime.utcnow():
                 print("   Session expired at", exp_time)
-                await session.get(ObjectId(s["id"])).delete()
+                # Delete expired session from DB
+                session_obj = await session.get(ObjectId(s["id"]))
+                if session_obj is not None:
+                    await session_obj.delete()
                 return False
             else:
                 print("   Session is not expired and valid until", exp_time)
@@ -53,7 +56,6 @@ async def create_task(task: Task, userID: Annotated[str, Header()] = None):
     validated = await authenticate_user(user_id, "create")
     if not validated:
         raise HTTPException(status_code=401, detail="Unauthorized")
-        return {"message": "Not Authenticated"}
     if validated:
         print("POST A NEW TASK HEADER:", user_id, "\n")
         task.user_id = user_id
@@ -87,7 +89,6 @@ async def update_task(id: str, task_data: TaskUpdate, userID: Annotated[str, Hea
     print("\nUPDATE TASK HEADER:", user_id, "\n")
     if not validated:
         raise HTTPException(status_code=401, detail="Unauthorized")
-        return {"message": "Not Authenticated"}
     if validated:
         task = await Task.get(id)
         if not task:
@@ -108,7 +109,6 @@ async def delete_task(id: str, userID: Annotated[str, Header()] = None):
     print("\nDELETE SINGLE TASK HEADER:", user_id, "\n")
     if not validated:
         raise HTTPException(status_code=401, detail="Unauthorized")
-        return {"message": "Not Authenticated"}
     if validated:
         task = await Task.get(id)
         if not task:
@@ -127,21 +127,8 @@ async def delete_tasks_by_user_id(userID: Annotated[str, Header()] = None):
     if not validated:
         print("Not Authenticated delete")
         raise HTTPException(status_code=401, detail="Unauthorized")
-        return {"message": "Not Authenticated"}
     if validated:
         await Task.find({"user_id": user_id}).delete_many()
         return {"message": f"All tasks for user {user_id} deleted"}
 
 #================================================================================================================== 
-
-#ADMIN ROUTES - not exposed in main app.py
-# Get all tasks (admin only)
-@tasks_router.get("/all", response_model=List[Task])
-async def get_all_tasks():
-    tasks = await Task.find_all().to_list()
-    return tasks
-# Delete all tasks (admin only)
-@tasks_router.delete("/all")
-async def delete_all_tasks():
-    await Task.find_all().delete_many()
-    return {"message": "All tasks deleted"}
