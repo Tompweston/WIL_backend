@@ -24,6 +24,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         },
     )
 
+
 # Handles FastAPI request validation errors (422)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
@@ -34,6 +35,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         },
     )
 
+
 # Handles server exceptions (500)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -43,4 +45,3 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
             "path": str(request.url),
         },
     )
-
