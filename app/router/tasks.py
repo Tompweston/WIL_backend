@@ -46,7 +46,22 @@ async def authenticate_user(user_id: str, type: str) -> bool:
         print("----------------\n")
     return True
 
-#places task routes under the /tasks prefix and tags them as "Tasks" in the API documentation
+async def max_reached(user_id: str) -> bool:
+    print ("\n IS MAX TASKS LIMIT REACHED?\n----------------")
+    print("   Checking how many tasks are available to create for user:", user_id)
+    tasks = await Task.find({"user_id": user_id}).to_list()
+    user_total = len(tasks) + 1
+    if user_total > 100:
+        print("   Theres No Room")
+        return True
+    else:
+        Remaining = 100 - user_total
+        print("   Theres Room for", Remaining, "more task(s)")
+        return False
+    print("----------------\n")
+
+
+#places task routes under the /tasks prefix and tags them as "tasks" in the API documentation
 tasks_router = APIRouter( prefix="/tasks", tags=["Tasks"] )
 #==================================================================================================================
 # Create a new task
@@ -58,9 +73,16 @@ async def create_task(task: Task, userID: Annotated[str, Header()] = None):
         raise HTTPException(status_code=401, detail="Unauthorized")
     if validated:
         print("POST A NEW TASK HEADER:", user_id, "\n")
-        task.user_id = user_id
-        await task.create()
-        return task
+        
+        maxxed_out = await max_reached(user_id)
+        if maxxed_out == False:
+            task.user_id = user_id
+            await task.create()
+            return task
+        if maxxed_out == True:
+            raise HTTPException(status_code=403, detail="Task limit reached (500 tasks max)")
+
+        
 
 #==================================================================================================================
 
@@ -93,6 +115,8 @@ async def update_task(id: str, task_data: TaskUpdate, userID: Annotated[str, Hea
         task = await Task.get(id)
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
+        if task.user_id != user_id:
+            raise HTTPException(status_code=401, detail="Unauthorized") #patch ensures that task being deleted is owned by user 
         recived = task_data.dict(exclude_unset=True)
         for key, value in recived.items():
             setattr(task, key, value)
@@ -111,6 +135,8 @@ async def delete_task(id: str, userID: Annotated[str, Header()] = None):
         raise HTTPException(status_code=401, detail="Unauthorized")
     if validated:
         task = await Task.get(id)
+        if task.user_id != user_id:
+            raise HTTPException(status_code=401, detail="Unauthorized")#patch ensures that task being deleted is owned by user 
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
         await task.delete()
