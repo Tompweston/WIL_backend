@@ -18,6 +18,14 @@ settings = Settings()  # Initialize settings
 # Initialize the FastAPI application with lifespan context manager & Create FastAPI app instance
 app = FastAPI(title="Todo API", lifespan=lifespan)
 
+# CORS middleware to allow cross-origin requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_servers,  # Allow origins from settings
+    allow_credentials=True,  # set to False if not using cookies/auth via cookies
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # API scalar documentation formatting
 @app.get("/scalar", include_in_schema=False)
