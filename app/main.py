@@ -28,14 +28,9 @@ async def scalar_html():
     )
 
 
-# CORS middleware to allow cross-origin requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_servers,  # Allow origins from settings
-    allow_credentials=True,  # set to False if not using cookies/auth via cookies
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.get("/")
+async def root_path():
+    return {"message": "Backend is up and running, you can now close this tab!"}
 
 
 # Include Routes
